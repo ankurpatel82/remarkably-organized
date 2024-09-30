@@ -88,7 +88,7 @@
 	let showHelp = $state($page.url.searchParams.get('help') !== '0');
 	let showMenu = $state(true);
 	let showAdvancedSettings = $state(false);
-	let enableHighResolution = $state($page.url.searchParams.has('highres'));
+	let enableHighResolution = $state(true);
 	let loadPages = $state(
 		$page.url.searchParams.get('help') === '0' &&
 			(browser || $page.url.searchParams.get('load') === '1'),

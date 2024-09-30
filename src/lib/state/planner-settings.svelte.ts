@@ -130,9 +130,9 @@ export class PlannerSettings {
 		width = $state(702);
 		font = $state('Roboto');
 		fontDisplay = $state('Bebas Neue');
-		colorText = $state('#424242');
-		colorLines = $state('#e2e2e2');
-		colorDots = $state('#454545');
+		colorText = $state('##0000ff');
+		colorLines = $state('#000000');
+		colorDots = $state('#000000');
 	})();
 
 	/** Settings for changing the dates of the planner (like start & end dates) */
@@ -145,13 +145,13 @@ export class PlannerSettings {
 		start = $state(this.defaultStart);
 		end = $state(this.defaultEnd);
 		today = $state(new Date(new Date().setUTCHours(0, 0, 0, 0)));
-		startWeekOnSunday = $state(false);
+		startWeekOnSunday = $state(true);
 	})();
 
 	/** Settings for changing the side navigation bar display */
 	readonly sideNav = new (class SideNavSettings {
 		disable = $state(false);
-		showCollectionLinks = $state(true);
+		showCollectionLinks = $state(false);
 		width = $state(52);
 		leftSide = $state(true);
 		font = $state('Bebas Neue');
@@ -160,7 +160,7 @@ export class PlannerSettings {
 	/** Settings for changing the top navigation bar display */
 	readonly topNav = new (class TopNavSettings {
 		disable = $state(false);
-		showCollectionLinks = $state(true);
+		showCollectionLinks = $state(false);
 		height = $state(45);
 		font = $state('Bebas Neue');
 	})();
@@ -168,10 +168,10 @@ export class PlannerSettings {
 	/** Settings for changing the cover page display */
 	readonly coverPage = new (class CoverPageSettings {
 		disable = $state(false);
-		name = $state('');
-		email = $state('');
+		name = $state('ANKUR A. PATEL');
+		email = $state('www.ankurpatel.com');
 		title = $state('');
-		showCollectionLinks = $state(true);
+		showCollectionLinks = $state(false);
 		showCurrentDay = $state(false);
 		darkBackground = $state(true);
 		font = $state('Bebas Neue');
@@ -181,12 +181,12 @@ export class PlannerSettings {
 	readonly yearPage = new (class YearPageSettings {
 		disable = $state(false);
 		notePagesTemplate = $state('notes-year' as PageTemplate);
-		notePagesAmount = $state(1);
+		notePagesAmount = $state(0);
 	})();
 
 	/** Settings for changing how the quarterly pages should work */
 	readonly quarterPage = new (class QuarterPageSettings {
-		disable = $state(false);
+		disable = $state(true);
 		notePagesTemplate = $state('notes-quarter' as PageTemplate);
 		notePagesAmount = $state(1);
 	})();
@@ -196,12 +196,12 @@ export class PlannerSettings {
 		disable = $state(false);
 		template = $state('calendar-month-with-notes' as PageTemplate);
 		notePagesTemplate = $state('dotted' as PageTemplate);
-		notePagesAmount = $state(2);
+		notePagesAmount = $state(0);
 	})();
 
 	/** Settings for changing how the weekly pages should work */
 	readonly weekPage = new (class WeekPageSettings {
-		disable = $state(false);
+		disable = $state(true);
 		template = $state('agenda-week' as PageTemplate);
 		notePagesTemplate = $state('dotted' as PageTemplate);
 		notePagesAmount = $state(0);
@@ -240,18 +240,10 @@ export class PlannerSettings {
 		{
 			id: 'notes',
 			name: 'Notes',
-			total: 40,
+			total: 0,
 			type: 'dotted',
-			numIndexPages: 2,
-			numPagesPerItem: 1,
-		},
-		{
-			id: 'goals',
-			name: 'Goals',
-			total: 1,
-			type: 'habit-year-by-week',
 			numIndexPages: 0,
-			numPagesPerItem: 1,
+			numPagesPerItem: 0,
 		},
 	] as Collection[]);
 
