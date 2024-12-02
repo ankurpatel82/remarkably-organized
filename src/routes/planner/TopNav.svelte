@@ -258,7 +258,7 @@
 				}
 				&:last-child {
 					a {
-						color: var(--text-high);
+						color: var(--fg-high);
 						// font-size: 1.1em;
 					}
 				}
@@ -272,7 +272,7 @@
 					display: flex;
 					height: 100%;
 					align-items: center;
-					color: var(--text-low);
+					color: var(--fg-high);
 				}
 				:global(svg) {
 					font-size: 1em;
