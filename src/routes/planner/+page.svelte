@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { page } from '$app/state';
+	import { page } from '$app/stores';
 	import { replaceState } from '$app/navigation';
 	import { slide } from 'svelte/transition';
 	import SettingsIcon from '~icons/fa/cog';
 	import LoadingIcon from '~icons/eos-icons/bubble-loading';
+	import { untrack } from 'svelte';
 	import CoverPage from './CoverPage.svelte';
 	import MonthPage from './MonthPage.svelte';
 	import YearPage from './YearPage.svelte';
@@ -59,9 +60,6 @@
 			settings.sideNav.font,
 		]),
 	);
-	const googleFontImport = $derived(
-		googleFontURL ? `@import url("${googleFontURL}");` : '',
-	);
 
 	function getAvailablePageTemplates(
 		location: 'collection' | 'year' | 'month' | 'quarter' | 'week' | 'day',
@@ -88,18 +86,18 @@
 	}
 
 	let customTimeframe = $state(false);
-	let showHelp = $state(page.url.searchParams.get('help') !== '0');
+	let showHelp = $state($page.url.searchParams.get('help') !== '0');
 	let showMenu = $state(true);
 	let showAdvancedSettings = $state(false);
-	let enableHighResolution = $state(page.url.searchParams.has('highres'));
+	let enableHighResolution = $state(true);
 	let loadPages = $state(
-		page.url.searchParams.get('help') === '0' &&
-			(browser || page.url.searchParams.get('load') === '1'),
+		$page.url.searchParams.get('help') === '0' &&
+			(browser || $page.url.searchParams.get('load') === '1'),
 	);
 
 	let settingsUrlInitialized = false;
 	$effect(() => {
-		const url = new URL(document.location.href);
+		const url = new URL(untrack(() => $page.url));
 		if (settings.edits) {
 			url.searchParams.set('settings', JSON.stringify(settings.edits));
 			replaceState(url, {});
@@ -110,12 +108,11 @@
 		settingsUrlInitialized = true;
 	});
 	$effect(() => {
-		const url = new URL(document.location.href);
-		if (enableHighResolution && !url.searchParams.has('highres')) {
+		const url = new URL(untrack(() => $page.url));
+		if (enableHighResolution) {
 			url.searchParams.set('highres', '');
 			replaceState(url, {});
-		}
-		if (!enableHighResolution && url.searchParams.has('highres')) {
+		} else {
 			url.searchParams.delete('highres');
 			replaceState(url, {});
 		}
@@ -160,7 +157,7 @@
 
 	function onHelpClose() {
 		showHelp = false;
-		const url = new URL(document.location.href);
+		const url = new URL($page.url);
 		url.searchParams.set('help', '0');
 		replaceState(url, {});
 		setTimeout(() => (loadPages = true), 180);
@@ -202,8 +199,8 @@
 
 <svelte:head>
 	<title>Planner Builder | Remarkably Organized</title>
-	{#if googleFontImport}
-		{@html `<style type="text/css">${googleFontImport}</style>`}
+	{#if googleFontURL}
+		{@html `<style>@import url("${googleFontURL}")</style>`}
 	{/if}
 </svelte:head>
 
@@ -224,7 +221,7 @@
 					!customTimeframe
 						? settings.date.start.getTime()
 						: 0}
-					onchange={onTimeframeSelection}>
+					on:change={onTimeframeSelection}>
 					{#each new Array(7) as _, i (i)}
 						{@const date = new Date(Date.UTC(new Date().getFullYear() - 1 + i))}
 						<option value={date.getTime()}>
@@ -243,7 +240,7 @@
 						id="start"
 						max={settings.date.end.toISOString().slice(0, 10)}
 						value={settings.date.start.toISOString().slice(0, 10)}
-						onchange={onStartDateChange} />
+						on:change={onStartDateChange} />
 				</fieldset>
 				<fieldset>
 					<label for="end">End Date</label>
@@ -253,7 +250,7 @@
 						id="end"
 						min={settings.date.start.toISOString().slice(0, 10)}
 						value={settings.date.end.toISOString().slice(0, 10)}
-						onchange={onEndDateChange} />
+						on:change={onEndDateChange} />
 				</fieldset>
 			{/if}
 			<div class="checkbox">
@@ -715,7 +712,7 @@
 							</fieldset>
 							<button
 								type="button"
-								onclick={() => settings.collections.splice(i, 1)}
+								on:click={() => settings.collections.splice(i, 1)}
 								style:color="var(--error)">
 								Remove Collection
 							</button>
@@ -723,7 +720,7 @@
 					{/each}
 					<button
 						type="button"
-						onclick={() =>
+						on:click={() =>
 							settings.collections.push({
 								name: 'Notes',
 								id: `${Date.now()}`,
@@ -761,14 +758,14 @@
 							type="button"
 							style="flex: 1"
 							disabled={settings.calendars.some((calendar) => calendar.updating)}
-							onclick={() => settings.importEvents(i)}>
+							on:click={() => settings.importEvents(i)}>
 							{calendar.updating ? `Importing...` : `Import Events`}
 						</button>
 						<button
 							type="button"
 							style="flex: 1"
 							disabled={settings.calendars.some((calendar) => calendar.updating)}
-							onclick={() => settings.calendars.splice(i, 1)}
+							on:click={() => settings.calendars.splice(i, 1)}
 							style:color="var(--error)">
 							Remove Calendar
 						</button>
@@ -777,7 +774,7 @@
 				<button
 					type="button"
 					disabled={settings.calendars.some((calendar) => calendar.updating)}
-					onclick={() =>
+					on:click={() =>
 						settings.calendars.push({
 							events: [],
 							lastUpdated: 0,
@@ -791,17 +788,17 @@
 				<button
 					type="button"
 					style="margin: 1rem 0;"
-					onclick={() => (showAdvancedSettings = true)}>
+					on:click={() => (showAdvancedSettings = true)}>
 					Advanced Settings
 				</button>
 			{/if}
 		</form>
 		<div class="actions">
-			<button class="export" onclick={() => window.print()}>Print to PDF</button>
+			<button class="export" on:click={() => window.print()}>Print to PDF</button>
 		</div>
 	</div>
 {/if}
-<button onclick={() => (showMenu = !showMenu)} class="menu-trigger">
+<button on:click={() => (showMenu = !showMenu)} class="menu-trigger">
 	<SettingsIcon />
 </button>
 <Toast />

@@ -52,7 +52,7 @@
 		height: 100%;
 		display: flex;
 		flex-direction: column;
-		color: var(--text-low);
+		color: var(--fg-high);
 		.hour {
 			display: flex;
 			justify-content: center;
@@ -61,7 +61,7 @@
 			span {
 				background-color: white;
 				padding: 0.5rem;
-				font-size: 0.7em;
+				font-size: 0.85em;
 				z-index: 1;
 				display: block;
 				small {

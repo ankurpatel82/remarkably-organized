@@ -147,7 +147,7 @@
 		justify-content: center;
 		flex-direction: column;
 		&.dark {
-			background-color: #3d3d3d;
+			background-color: #304ffe;
 			color: #ccc;
 			h1 {
 				color: white;
@@ -230,10 +230,7 @@
 		justify-content: center;
 		flex-direction: column;
 		gap: 0.25rem;
-		font-size: 1.4em;
-		small {
-			opacity: 0.8;
-			color: currentColor;
-		}
+		font-size: 2.5em;
+		color: #ffffff;
 	}
 </style>
