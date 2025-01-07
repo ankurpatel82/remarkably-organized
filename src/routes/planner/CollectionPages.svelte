@@ -75,6 +75,7 @@
 					<Page
 						display={collection.type}
 						{settings}
+						timeframe={year}
 						columns={collection.columns}
 						lines={collection.lines} />
 				</article>
@@ -116,27 +117,6 @@
 				max-height: 1.5rem;
 				min-height: 0.9rem;
 			}
-		}
-	}
-	.collection {
-		width: 100%;
-		height: 100%;
-		overflow: hidden;
-
-		&:not(.lined):not(.lined-large) {
-			padding-top: 0.5rem;
-		}
-		&.dotted {
-			height: calc(100% - 2rem);
-		}
-		&.grid {
-			height: calc(100% - 2rem);
-		}
-		&.lined {
-			padding: 0 2rem 1rem;
-		}
-		&.numbered {
-			padding: 0 2rem 1rem;
 		}
 	}
 </style>
